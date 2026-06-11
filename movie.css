@@ -1,7 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
+
 body {
   margin: 0;
-  font-family: 'Georgia', 'Trebuchet MS', serif;
+  font-family: 'Merriweather', 'Cinzel', 'Georgia', 'Trebuchet MS', serif;
   background: linear-gradient(180deg, #ffffff 0%, #ffffff 35%, #000000 100%);
+  /* ベースフォントをビューポートに応じて拡大縮小 */
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+
+/* 見出し中央寄せとサブタイトル */
+h2 {
+  text-align: center;
+  margin-bottom: 2px;
+  /* 見出しを画面サイズに応じて大きくする */
+  font-size: clamp(20px, 3.6vw, 36px);
+  line-height: 1.1;
+}
+
+.h2-subtitle {
+  display: block;
+  text-align: center;
+  margin-top: 2px;
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.95);
+  opacity: 0.95;
 }
 
 /* ナビゲーション */
@@ -32,6 +55,10 @@ body {
   border: none;
   padding: 0;
   gap: 6px;
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 10001;
 }
 
 .hamburger span {
@@ -55,24 +82,45 @@ body {
 }
 
 .navbar-menu {
-  position: absolute;
-  top: 70px;
-  right: 0;
+  position: fixed;
+  inset: 0; /* fill viewport but hidden by height/opacity */
+  display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.9);
-  gap: 0;
-  max-height: 0;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.95);
+  gap: 20px;
+  height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: height 0.28s ease, opacity 0.28s ease;
   padding: 0;
   list-style: none;
   margin: 0;
-  min-width: 200px;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .navbar-menu.active {
-  max-height: 300px;
-  padding: 20px 0;
+  height: 100vh;
+  padding: 60px 20px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Menu links larger and spaced when overlay is active */
+.navbar-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  letter-spacing: 1px;
+  display: block;
+  padding: 10px 0;
+}
+.navbar-menu li { list-style: none; }
+
+@media (min-width: 1024px) {
+  .navbar-menu a { font-size: 22px; }
 }
 
 .navbar-menu li {
@@ -163,7 +211,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100vh;
   overflow: hidden;
   background: #ffffff;
 }
@@ -171,15 +219,12 @@ body {
 .hero-img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
+  object-position: center center;
 }
 
-/* スマホ向けアスペクト比調整 */
-@media (max-width: 768px) {
-  .hero {
-    aspect-ratio: 4 / 3;
-  }
-}
+/* ヒーロー画像は画像自身の縦横比を維持（高さは自動） */
 
 
 
@@ -197,7 +242,6 @@ section.intro-text {
 .intro-banner {
   max-width: none;
   width: 100%;
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -206,9 +250,9 @@ section.intro-text {
 
 .intro-banner-img {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
-  object-fit: cover;
+  max-width: 100%;
 }
 
 .intro-text {
@@ -225,28 +269,23 @@ section.intro-text {
   text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
   border-radius: 0;
   box-sizing: border-box;
-}
-
-.intro-text p {
-  max-width: 660px;
-  margin: 0 auto;
-  line-height: 1.75;
-  font-size: 16px;
-  font-weight: 500;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100%;
 }
 
 .intro-text h2 {
-  font-size: 38px;
+  font-size: clamp(24px, 4vw, 38px);
   font-weight: bold;
   letter-spacing: 1px;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .intro-text p {
   max-width: 100%;
   margin: 0 auto;
-  line-height: 1.8;
-  font-size: 18px;
+  line-height: 1.6;
+  font-size: clamp(14px, 2.2vw, 18px);
   font-weight: 500;
 }
 
@@ -258,6 +297,11 @@ section.intro-text {
   
   .intro-text p {
     font-size: 16px;
+  }
+  .intro-text {
+    padding: 20px;
+    justify-content: flex-start;
+    text-align: left;
   }
 }
 
@@ -281,7 +325,7 @@ section.intro-text {
 
 .staff-description p {
   line-height: 1.8;
-  font-size: 16px;
+  font-size: clamp(15px, 1.6vw, 18px);
 }
 
 .staff-image img {
@@ -309,9 +353,39 @@ section.intro-text {
 
 /* キャスト */
 .cast {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: none;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  /* 背景に casthaikei.png を表示して、情報をその上に重ねる */
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('images/casthaikei.png') left top/cover no-repeat;
+  background-attachment: scroll;
+  background-position: left top;
+  min-height: 420px;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
+
+/* HTML 内の img はフォールバックとして残すが、表示は背景優先で非表示にする */
+.cast .cast-bg {
+  display: none;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.cast > * {
+  position: relative;
+  z-index: 2;
+}
+
+.cast h2, .cast .h2-subtitle {
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
 
 
 .cast-grid {
@@ -328,15 +402,19 @@ section.intro-text {
   overflow: hidden;
 }
 
+.cast-card h3, .cast-card p { color: #fff; }
+
 .cast-card img {
-  width: 100%;
+  width: 70%;
+  max-width: 240px;
   aspect-ratio: 3 / 4;
   object-fit: cover;
   display: block;
-  transform: translateY(16px) scale(1.02);
+  margin: 0 auto;
+  transform: translateY(12px) scale(1.0);
   filter: brightness(0.4) contrast(1.1);
   box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.6);
-  transition: transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease;
+  transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
 }
 
 .cast-card:hover img {
@@ -344,6 +422,15 @@ section.intro-text {
   filter: brightness(1) contrast(1.05);
   box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0);
 }
+
+/* キャストの見出し・本文もレスポンシブに */
+.cast h2 { font-size: clamp(18px, 2.4vw, 28px); }
+.cast .h2-subtitle { font-size: clamp(12px, 1.2vw, 14px); }
+.cast-card h3 { font-size: clamp(14px, 1.6vw, 20px); margin-top: 8px; }
+.cast-card p { font-size: clamp(12px, 1.2vw, 16px); line-height: 1.5; }
+
+/* ナビメニュー項目を画面に応じて大きくする */
+.navbar-menu a { font-size: clamp(16px, 2.4vw, 22px); }
 
 
 @media (max-width: 768px) {
@@ -377,7 +464,7 @@ section.intro-text {
 }
 
 .news-item {
-  background: #fff;
+  background: #9c9b9b;
   padding: 16px;
 }
 
@@ -393,4 +480,26 @@ section.intro-text {
 .fade.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* haikei の直下に置く画像を幅揃えで表示 */
+.haikei-sibling{
+  width:100%;
+  height:auto;
+  display:block;
+  margin:0;
+}
+
+/* デスクトップ表示で画像を大きくする */
+@media (min-width: 1024px) {
+  .cast-card img {
+    width: clamp(220px, 16vw, 420px);
+    max-width: none;
+  }
+
+  .staff-image img {
+    width: clamp(320px, 24vw, 640px);
+  }
+
+  
 }
